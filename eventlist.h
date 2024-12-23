@@ -37,4 +37,16 @@ class EventList {
 		simtime_ps_t m_curr_time = 0;
 		simtime_ps_t m_end_time = 0;
 };
+
+inline auto EventList::now() -> simtime_ps_t {
+	return m_curr_time;
+}
+
+inline auto EventList::is_done() -> bool {
+	return now() >= m_end_time || m_pending_events.empty(); 
+}
+
+inline auto EventList::event_in(EventSource& event_source, simtime_ps_t time_from_now) -> void {
+	event_at(event_source, now() +  time_from_now);
+}
 #endif
