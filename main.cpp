@@ -17,15 +17,17 @@ auto main (int argc, char* argv[]) -> int {
 	}
 	auto k = std::atoi(argv[1]);
 	auto& eventlist = EventList::get_instance(INT64_MAX);
-	auto sched = Scheduler();
-	sched.set_k(k);
-	auto engine = LLMEngine(eventlist, sched);
+	auto engine = LLMEngine(eventlist,
+			 Scheduler(100, k)
+			 );
 	//Add requests
 	auto req_generator = RequestGenerator(eventlist, engine, 1, 100000);
 	eventlist.event_in(req_generator, 1);
+	//Start sim
 	while (!eventlist.is_done()) {
 		eventlist.step();
 	}
+	//Calculate metrics
 	simtime_ps_t end_time = eventlist.now();	
 	simtime_ps_t mean_completion_time = 0;
 	int total_tokens = 0;

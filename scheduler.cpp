@@ -30,13 +30,13 @@ auto Scheduler::schedule(LLMEngine& engine) -> SchedulerOutputs {
 	auto finished_ids = std::ranges::to<std::vector>(
 		running_q | get_finished | get_ids
 	);	
-	if (running_q.size() - finished_ids.size() > 100 - m_k) {
+	if (running_q.size() - finished_ids.size() > m_N - m_k) {
 		return {
 			0,
 			finished_ids
 		};
 	}
-	int vaccany = 100 - (running_q.size() - finished_ids.size());
+	int vaccany = m_N - (running_q.size() - finished_ids.size());
 	assert(vaccany >= 0);
 	return {
 		std::min(vaccany, static_cast<int>(pending_q.size())),

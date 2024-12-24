@@ -5,6 +5,7 @@
 #include "eventlist.h"
 #include "scheduler.h"
 #include "units.h"
+#include <cassert>
 #include <deque>
 #include <list>
 #include <memory>
@@ -29,7 +30,7 @@ class LLMEngine : public EventSource {
 
 		template<typename S>
 		requires std::is_base_of_v<AbstractScheduler, std::remove_cvref_t<S>>
-		LLMEngine(EventList&, S&& scheduler);
+		LLMEngine(EventList&, S&&);
 
 		void add_request(Request request);
 		void add_request(std::unique_ptr<Request> request);
@@ -46,6 +47,7 @@ template<typename S>
 requires std::is_base_of_v<AbstractScheduler, std::remove_cvref_t<S>>
 LLMEngine::LLMEngine(EventList& eventlist, S&& scheduler) : EventSource(eventlist) {
 	this->m_scheduler = std::make_unique< std::remove_cvref_t<S> >(std::forward<S>(scheduler));
+	assert(m_scheduler);
 }
 
 #endif

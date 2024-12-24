@@ -22,12 +22,11 @@ class AbstractScheduler {
 class Scheduler : public AbstractScheduler {
 	public:
 		Scheduler() = default;
+		Scheduler(int max_N, int prefill_k) : m_N(max_N), m_k(prefill_k) {}
 		virtual ~Scheduler() override = default;
 		virtual SchedulerOutputs schedule(LLMEngine&) override;
-		void set_k(int k) {
-			m_k = k;
-		}
 	private:
-		int m_k = 11;
+		int m_N = 100;
+		int m_k = 1;
 };
 #endif
