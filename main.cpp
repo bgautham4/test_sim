@@ -3,12 +3,14 @@
 #include "request_generator.h"
 #include "scheduler.h"
 #include "units.h"
+#include "lookup.h"
 #include <climits>
 #include <cstdint>
 #include <cstdlib>
 #include <iostream>
 
 double to_seconds(simtime_ps_t time);
+LookupTable table("dat.txt");
 
 auto main (int argc, char* argv[]) -> int {
 	if (argc != 2) {

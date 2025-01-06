@@ -2,9 +2,11 @@
 #include "eventlist.h"
 #include "request.h"
 #include "scheduler.h"
-#include "utils.h"
+#include "lookup.h"
 #include <memory>
 #include <cassert>
+
+extern LookupTable table;
 
 auto LLMEngine::add_request(std::unique_ptr<Request> request) -> void {
 	m_pending_queue.emplace_back(std::move(request));
@@ -45,7 +47,7 @@ auto LLMEngine::process_event() -> void {
 		//Scheduled prefill
 		m_eventlist_ref.event_in(
 			*this,
-			get_prefill_time_for(num_prefills) 
+			table.get_time_for(LookupTable::For::PREFILL, num_prefills)
 		);
 		return;
 	}
@@ -62,6 +64,6 @@ auto LLMEngine::process_event() -> void {
 	}
 	m_eventlist_ref.event_in(
 		*this,
-		get_decode_time_for(num_decodes) 
+		table.get_time_for(LookupTable::For::DECODE, num_decodes)
 	);	
 }
